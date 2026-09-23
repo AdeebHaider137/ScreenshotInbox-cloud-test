@@ -70,8 +70,8 @@ jobs:
           APK="$(find "$GITHUB_WORKSPACE" -type f -path '*/build/outputs/apk/debug/*.apk' | head -n 1)"
           test -n "$APK"
           test -f "$APK"
-          cp "$APK" "$RUNNER_TEMP/screenshotinbox-debug.apk"
-          test -f "$RUNNER_TEMP/screenshotinbox-debug.apk"
+          cp "$APK" "/tmp/screenshotinbox-debug.apk"
+          test -f "/tmp/screenshotinbox-debug.apk"
           echo "Prepared APK: $APK"
 
       - name: Runtime smoke test on Android emulator
@@ -85,7 +85,7 @@ jobs:
           disable-animations: true
           script: |
             set -e
-            APK="$RUNNER_TEMP/screenshotinbox-debug.apk"
+            APK="/tmp/screenshotinbox-debug.apk"
             PACKAGE="com.example.screenshotinbox.debug"
             ACTIVITY="com.example.screenshotinbox.MainActivity"
 
