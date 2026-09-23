@@ -2,6 +2,7 @@ package com.example.screenshotinbox.ui.screens
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,10 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenu
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +53,6 @@ import coil.compose.AsyncImage
 import com.example.screenshotinbox.viewmodel.DetailViewModel
 import com.example.screenshotinbox.viewmodel.ViewModelFactory
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenshotDetailScreen(
     factory: ViewModelFactory,
@@ -164,21 +160,19 @@ fun ScreenshotDetailScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            ExposedDropdownMenuBox(
-                expanded = categoryMenuExpanded,
-                onExpandedChange = { categoryMenuExpanded = it }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { categoryMenuExpanded = !categoryMenuExpanded }
             ) {
                 OutlinedTextField(
                     value = shot.category,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Category") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryMenuExpanded) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()
+                    modifier = Modifier.fillMaxWidth()
                 )
-                ExposedDropdownMenu(
+                DropdownMenu(
                     expanded = categoryMenuExpanded,
                     onDismissRequest = { categoryMenuExpanded = false }
                 ) {
