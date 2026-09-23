@@ -63,6 +63,17 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace --no-daemon
 
+      - name: Prepare APK for runtime smoke test
+        shell: bash
+        run: |
+          set -e
+          APK="$(find "$GITHUB_WORKSPACE" -type f -path '*/build/outputs/apk/debug/*.apk' | head -n 1)"
+          test -n "$APK"
+          test -f "$APK"
+          cp "$APK" "$RUNNER_TEMP/screenshotinbox-debug.apk"
+          test -f "$RUNNER_TEMP/screenshotinbox-debug.apk"
+          echo "Prepared APK: $APK"
+
       - name: Runtime smoke test on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -74,13 +85,14 @@ jobs:
           disable-animations: true
           script: |
             set -e
-            APK="$(find "$GITHUB_WORKSPACE" -type f -path '*/build/outputs/apk/debug/*.apk' | head -n 1)"
+            APK="$RUNNER_TEMP/screenshotinbox-debug.apk"
             PACKAGE="com.example.screenshotinbox.debug"
             ACTIVITY="com.example.screenshotinbox.MainActivity"
 
             test -n "$APK"
             test -f "$APK"
             echo "Using APK: $APK"
+            test -f "$APK"
             adb install -r "$APK"
             adb shell am force-stop "$PACKAGE"
             adb shell am start -W -n "$PACKAGE/$ACTIVITY"
