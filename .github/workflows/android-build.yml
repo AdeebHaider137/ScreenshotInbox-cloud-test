@@ -74,11 +74,13 @@ jobs:
           disable-animations: true
           script: |
             set -e
-            APK="app/build/outputs/apk/debug/app-debug.apk"
+            APK="$(find "$GITHUB_WORKSPACE" -type f -path '*/build/outputs/apk/debug/*.apk' | head -n 1)"
             PACKAGE="com.example.screenshotinbox.debug"
             ACTIVITY="com.example.screenshotinbox.MainActivity"
 
+            test -n "$APK"
             test -f "$APK"
+            echo "Using APK: $APK"
             adb install -r "$APK"
             adb shell am force-stop "$PACKAGE"
             adb shell am start -W -n "$PACKAGE/$ACTIVITY"
